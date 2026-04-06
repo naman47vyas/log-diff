@@ -7,6 +7,9 @@ import (
 	"io"
 	"log"
 	"os"
+	"runtime"
+	"sync"
+	"sync/atomic"
 
 	"github.com/naman47vyas/log-diff/internal/differ"
 	"github.com/naman47vyas/log-diff/internal/drain"
@@ -33,7 +36,7 @@ func main() {
 		log.Fatalf("invalid format: %v", err)
 	}
 
-	norm := normalizer.New()
+	norm := normalizer.NewFast()
 	drainCfg := drain.DefaultConfig()
 	drainCfg.SimThreshold = *simTh
 
@@ -63,7 +66,7 @@ func newParser(format string) (parser.Parser, error) {
 	}
 }
 
-func processFile(path string, p parser.Parser, norm *normalizer.Normalizer, cfg drain.Config) (*drain.Drain, int) {
+func processFile(path string, p parser.Parser, norm normalizer.Norm, cfg drain.Config) (*drain.Drain, int) {
 	f, err := os.Open(path)
 	if err != nil {
 		log.Fatalf("cannot open %s: %v", path, err)
@@ -73,32 +76,60 @@ func processFile(path string, p parser.Parser, norm *normalizer.Normalizer, cfg 
 	return processReader(f, p, norm, cfg)
 }
 
-func processReader(r io.Reader, p parser.Parser, norm *normalizer.Normalizer, cfg drain.Config) (*drain.Drain, int) {
+func processReader(r io.Reader, p parser.Parser, norm normalizer.Norm, cfg drain.Config) (*drain.Drain, int) {
+	numWorkers := runtime.NumCPU()
+
+	lines := make(chan string, 4096)
+	results := make(chan string, 4096)
+
+	var errCount atomic.Int64
+
+	// Stage 1: scanner goroutine reads lines into channel
+	go func() {
+		scanner := bufio.NewScanner(r)
+		for scanner.Scan() {
+			line := scanner.Text()
+			if line != "" {
+				lines <- line
+			}
+		}
+		if err := scanner.Err(); err != nil {
+			log.Fatalf("error reading input: %v", err)
+		}
+		close(lines)
+	}()
+
+	// Stage 2: N workers parse + normalize in parallel
+	var workerWg sync.WaitGroup
+	workerWg.Add(numWorkers)
+	for i := 0; i < numWorkers; i++ {
+		go func() {
+			defer workerWg.Done()
+			for line := range lines {
+				entry, err := p.Parse(line)
+				if err != nil {
+					errCount.Add(1)
+					continue
+				}
+				normalized := norm.Normalize(entry.Severity + " " + entry.Message)
+				results <- normalized
+			}
+		}()
+	}
+
+	// Close results channel when all workers are done
+	go func() {
+		workerWg.Wait()
+		close(results)
+	}()
+
+	// Stage 3: single goroutine feeds Drain
 	d := drain.New(cfg)
-	scanner := bufio.NewScanner(r)
-	errCount := 0
-
-	for scanner.Scan() {
-		line := scanner.Text()
-		if line == "" {
-			continue
-		}
-
-		entry, err := p.Parse(line)
-		if err != nil {
-			errCount++
-			continue
-		}
-
-		normalized := norm.Normalize(entry.Message)
+	for normalized := range results {
 		d.Train(normalized)
 	}
 
-	if err := scanner.Err(); err != nil {
-		log.Fatalf("error reading input: %v", err)
-	}
-
-	return d, errCount
+	return d, int(errCount.Load())
 }
 
 func printReport(r *differ.Report) {

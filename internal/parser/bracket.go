@@ -1,7 +1,7 @@
 package parser
 
 import (
-	"regexp"
+	regexp "github.com/grafana/regexp"
 )
 
 // bracketRe matches: <timestamp> [<SEVERITY>] <message>
