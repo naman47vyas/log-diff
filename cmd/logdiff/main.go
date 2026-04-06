@@ -8,7 +8,6 @@ import (
 	"log"
 	"os"
 	"runtime"
-	"runtime/pprof"
 	"sync"
 	"sync/atomic"
 
@@ -19,10 +18,6 @@ import (
 )
 
 func main() {
-	f, _ := os.Create("cpu.prof")
-	pprof.StartCPUProfile(f)
-	defer pprof.StopCPUProfile()
-
 	preFile := flag.String("pre", "", "path to pre-release log file")
 	postFile := flag.String("post", "", "path to post-release log file")
 	format := flag.String("format", "bracket", "log format: bracket")
@@ -41,7 +36,7 @@ func main() {
 		log.Fatalf("invalid format: %v", err)
 	}
 
-	norm := normalizer.New()
+	norm := normalizer.NewFast()
 	drainCfg := drain.DefaultConfig()
 	drainCfg.SimThreshold = *simTh
 
@@ -71,7 +66,7 @@ func newParser(format string) (parser.Parser, error) {
 	}
 }
 
-func processFile(path string, p parser.Parser, norm *normalizer.Normalizer, cfg drain.Config) (*drain.Drain, int) {
+func processFile(path string, p parser.Parser, norm normalizer.Norm, cfg drain.Config) (*drain.Drain, int) {
 	f, err := os.Open(path)
 	if err != nil {
 		log.Fatalf("cannot open %s: %v", path, err)
@@ -81,7 +76,7 @@ func processFile(path string, p parser.Parser, norm *normalizer.Normalizer, cfg 
 	return processReader(f, p, norm, cfg)
 }
 
-func processReader(r io.Reader, p parser.Parser, norm *normalizer.Normalizer, cfg drain.Config) (*drain.Drain, int) {
+func processReader(r io.Reader, p parser.Parser, norm normalizer.Norm, cfg drain.Config) (*drain.Drain, int) {
 	numWorkers := runtime.NumCPU()
 
 	lines := make(chan string, 4096)
