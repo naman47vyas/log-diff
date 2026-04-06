@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/k0kubun/pp"
+	"github.com/naman47vyas/log-diff/internal/normalizer"
 	"github.com/naman47vyas/log-diff/internal/parser"
 )
 
@@ -28,9 +29,13 @@ func main() {
 	p, err := newParser(*format)
 
 	pp.Println(p)
+
 	if err != nil {
 		log.Fatalf("invalid format: %v", err)
 	}
+
+	norm := normalizer.New()
+	pp.Println(norm)
 
 }
 
