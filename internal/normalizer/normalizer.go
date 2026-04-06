@@ -3,7 +3,7 @@ package normalizer
 import (
 	"strings"
 
-	regexp "github.com/grafana/regexp"
+	"regexp"
 )
 
 // Norm is the interface that any normalizer must satisfy.
