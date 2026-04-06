@@ -1,8 +1,9 @@
 package normalizer
 
 import (
-	"regexp"
 	"strings"
+
+	regexp "github.com/grafana/regexp"
 )
 
 type rule struct {
