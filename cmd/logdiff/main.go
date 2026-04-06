@@ -1,24 +1,26 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
+	"io"
 	"log"
 	"os"
 
-	"github.com/k0kubun/pp"
+	"github.com/naman47vyas/log-diff/internal/differ"
+	"github.com/naman47vyas/log-diff/internal/drain"
 	"github.com/naman47vyas/log-diff/internal/normalizer"
 	"github.com/naman47vyas/log-diff/internal/parser"
 )
 
 func main() {
-	preFile := flag.String("pre", "", "path to the pre-release file")
-	postFile := flag.String("post", "", "path to the post-release file")
-
+	preFile := flag.String("pre", "", "path to pre-release log file")
+	postFile := flag.String("post", "", "path to post-release log file")
 	format := flag.String("format", "bracket", "log format: bracket")
-	// simTh := flag.Float64("sim-threshold", 0.4, "Drain similarity threshold (0.0-1.0)")
-
-	// freqTh := flag.Float64("freq-threshold", 2.0, "Frequency change ratio to flag as changed")
+	simTh := flag.Float64("sim-threshold", 0.4, "Drain similarity threshold (0.0-1.0)")
+	freqTh := flag.Float64("freq-threshold", 2.0, "frequency change ratio to flag as changed")
+	flag.Parse()
 
 	if *preFile == "" || *postFile == "" {
 		fmt.Fprintln(os.Stderr, "usage: logdiff --pre <file> --post <file>")
@@ -27,16 +29,29 @@ func main() {
 	}
 
 	p, err := newParser(*format)
-
-	pp.Println(p)
-
 	if err != nil {
 		log.Fatalf("invalid format: %v", err)
 	}
 
 	norm := normalizer.New()
-	pp.Println(norm)
+	drainCfg := drain.DefaultConfig()
+	drainCfg.SimThreshold = *simTh
 
+	preDrain, preErrs := processFile(*preFile, p, norm, drainCfg)
+	postDrain, postErrs := processFile(*postFile, p, norm, drainCfg)
+
+	if preErrs > 0 {
+		fmt.Fprintf(os.Stderr, "warning: %d unparseable lines in pre-release log\n", preErrs)
+	}
+	if postErrs > 0 {
+		fmt.Fprintf(os.Stderr, "warning: %d unparseable lines in post-release log\n", postErrs)
+	}
+
+	diffCfg := differ.DefaultConfig()
+	diffCfg.FreqRatioThreshold = *freqTh
+
+	report := differ.Diff(preDrain.Clusters(), postDrain.Clusters(), diffCfg)
+	printReport(report)
 }
 
 func newParser(format string) (parser.Parser, error) {
@@ -45,5 +60,87 @@ func newParser(format string) (parser.Parser, error) {
 		return parser.NewBracketParser(), nil
 	default:
 		return nil, fmt.Errorf("unsupported format: %s", format)
+	}
+}
+
+func processFile(path string, p parser.Parser, norm *normalizer.Normalizer, cfg drain.Config) (*drain.Drain, int) {
+	f, err := os.Open(path)
+	if err != nil {
+		log.Fatalf("cannot open %s: %v", path, err)
+	}
+	defer f.Close()
+
+	return processReader(f, p, norm, cfg)
+}
+
+func processReader(r io.Reader, p parser.Parser, norm *normalizer.Normalizer, cfg drain.Config) (*drain.Drain, int) {
+	d := drain.New(cfg)
+	scanner := bufio.NewScanner(r)
+	errCount := 0
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line == "" {
+			continue
+		}
+
+		entry, err := p.Parse(line)
+		if err != nil {
+			errCount++
+			continue
+		}
+
+		normalized := norm.Normalize(entry.Message)
+		d.Train(normalized)
+	}
+
+	if err := scanner.Err(); err != nil {
+		log.Fatalf("error reading input: %v", err)
+	}
+
+	return d, errCount
+}
+
+func printReport(r *differ.Report) {
+	fmt.Printf("=== Log Diff Report ===\n")
+	fmt.Printf("Pre-release:  %d total lines, %d templates\n", r.PreTotal, r.PreTemplates)
+	fmt.Printf("Post-release: %d total lines, %d templates\n\n", r.PostTotal, r.PostTemplates)
+
+	if len(r.New) > 0 {
+		fmt.Printf("--- NEW templates (%d) ---\n", len(r.New))
+		for _, e := range r.New {
+			fmt.Printf("  [count: %d, %.1f%%] %s\n", e.PostCount, e.PostFreqPct, e.Template)
+			printSamples(e.Samples)
+		}
+		fmt.Println()
+	}
+
+	if len(r.Gone) > 0 {
+		fmt.Printf("--- GONE templates (%d) ---\n", len(r.Gone))
+		for _, e := range r.Gone {
+			fmt.Printf("  [was: %d, %.1f%%] %s\n", e.PreCount, e.PreFreqPct, e.Template)
+			printSamples(e.Samples)
+		}
+		fmt.Println()
+	}
+
+	if len(r.Changed) > 0 {
+		fmt.Printf("--- CHANGED templates (%d) ---\n", len(r.Changed))
+		for _, e := range r.Changed {
+			fmt.Printf("  [pre: %d (%.1f%%) → post: %d (%.1f%%)] %s\n",
+				e.PreCount, e.PreFreqPct, e.PostCount, e.PostFreqPct, e.Template)
+			printSamples(e.Samples)
+		}
+		fmt.Println()
+	}
+
+	if len(r.New) == 0 && len(r.Gone) == 0 && len(r.Changed) == 0 {
+		fmt.Println("No differences found.")
+	}
+}
+
+func printSamples(samples []string) {
+	for _, s := range samples {
+		fmt.Printf("    → %s\n", s)
 	}
 }
