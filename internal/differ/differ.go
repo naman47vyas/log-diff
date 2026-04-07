@@ -1,6 +1,10 @@
 package differ
 
-import "github.com/naman47vyas/log-diff/internal/drain"
+import (
+	"strings"
+
+	"github.com/naman47vyas/log-diff/internal/drain"
+)
 
 // Config controls how the differ classifies frequency changes.
 type Config struct {
@@ -59,6 +63,36 @@ func Diff(pre, post []*drain.LogCluster, cfg Config) *Report {
 	preMap := indexByTemplate(pre)
 	postMap := indexByTemplate(post)
 
+	// Build match maps: pre template -> post template and vice versa.
+	// First try exact match, then fall back to fuzzy (wildcard-aware).
+	preToPost := make(map[string]string)
+	postToPre := make(map[string]string)
+
+	// Pass 1: exact matches
+	for tmpl := range preMap {
+		if _, exists := postMap[tmpl]; exists {
+			preToPost[tmpl] = tmpl
+			postToPre[tmpl] = tmpl
+		}
+	}
+
+	// Pass 2: fuzzy matches for unmatched templates
+	for preTmpl := range preMap {
+		if _, matched := preToPost[preTmpl]; matched {
+			continue
+		}
+		for postTmpl := range postMap {
+			if _, matched := postToPre[postTmpl]; matched {
+				continue
+			}
+			if templatesMatch(preTmpl, postTmpl) {
+				preToPost[preTmpl] = postTmpl
+				postToPre[postTmpl] = preTmpl
+				break
+			}
+		}
+	}
+
 	r := &Report{
 		PreTotal:      preTotal,
 		PostTotal:     postTotal,
@@ -67,12 +101,12 @@ func Diff(pre, post []*drain.LogCluster, cfg Config) *Report {
 	}
 
 	// find gone and changed templates
-	for tmpl, preCluster := range preMap {
-		postCluster, exists := postMap[tmpl]
-		if !exists {
+	for preTmpl, preCluster := range preMap {
+		postTmpl, matched := preToPost[preTmpl]
+		if !matched {
 			r.Gone = append(r.Gone, Entry{
 				Category:   Gone,
-				Template:   tmpl,
+				Template:   preTmpl,
 				PreCount:   preCluster.Count,
 				PostCount:  0,
 				PreFreqPct: pct(preCluster.Count, preTotal),
@@ -81,14 +115,14 @@ func Diff(pre, post []*drain.LogCluster, cfg Config) *Report {
 			continue
 		}
 
-		// exists in both — check frequency change
+		postCluster := postMap[postTmpl]
 		preFreq := pct(preCluster.Count, preTotal)
 		postFreq := pct(postCluster.Count, postTotal)
 
 		if isSignificantChange(preFreq, postFreq, cfg.FreqRatioThreshold) {
 			r.Changed = append(r.Changed, Entry{
 				Category:    Changed,
-				Template:    tmpl,
+				Template:    preTmpl,
 				PreCount:    preCluster.Count,
 				PostCount:   postCluster.Count,
 				PreFreqPct:  preFreq,
@@ -99,11 +133,11 @@ func Diff(pre, post []*drain.LogCluster, cfg Config) *Report {
 	}
 
 	// find new templates
-	for tmpl, postCluster := range postMap {
-		if _, exists := preMap[tmpl]; !exists {
+	for postTmpl, postCluster := range postMap {
+		if _, matched := postToPre[postTmpl]; !matched {
 			r.New = append(r.New, Entry{
 				Category:    New,
-				Template:    tmpl,
+				Template:    postTmpl,
 				PreCount:    0,
 				PostCount:   postCluster.Count,
 				PostFreqPct: pct(postCluster.Count, postTotal),
@@ -113,6 +147,29 @@ func Diff(pre, post []*drain.LogCluster, cfg Config) *Report {
 	}
 
 	return r
+}
+
+// templatesMatch returns true if two templates have the same
+// token count and every position either matches exactly or
+// one side has a <*> wildcard.
+func templatesMatch(a, b string) bool {
+	aToks := strings.Fields(a)
+	bToks := strings.Fields(b)
+
+	if len(aToks) != len(bToks) {
+		return false
+	}
+
+	for i := range aToks {
+		if aToks[i] == bToks[i] {
+			continue
+		}
+		if aToks[i] == "<*>" || bToks[i] == "<*>" {
+			continue
+		}
+		return false
+	}
+	return true
 }
 
 // --- helpers -----------------------------------------------------------------

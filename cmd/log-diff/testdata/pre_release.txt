@@ -1,0 +1,100 @@
+2026-04-01T08:00:00.000Z [INFO] user bob authenticated via SSO from 245.66.59.107
+2026-04-01T08:00:00.253Z [DEBUG] xml config fallback loaded from /etc/app/legacy-config.xml
+2026-04-01T08:00:02.068Z [INFO] user deploy-bot authenticated via SSO from 88.147.32.245
+2026-04-01T08:00:03.336Z [ERROR] request 14b5f634-c337-686a-4962-d7c3c530fe9e failed: context deadline exceeded (trace_id=1807fedec8c56b70d5d22bbdaa59c890)
+2026-04-01T08:00:07.832Z [DEBUG] xml config fallback loaded from /etc/app/legacy-config.xml
+2026-04-01T08:00:09.785Z [INFO] connected to database at 215.24.232.101:80
+2026-04-01T08:00:01.488Z [INFO] user bob authenticated via SSO from 183.34.105.152
+2026-04-01T08:00:09.380Z [INFO] connected to database at 73.197.239.72:4317
+2026-04-01T08:00:02.976Z [WARN] memory usage at 14.4% for service alertmanager
+2026-04-01T08:00:03.663Z [WARN] slow query on table users took 20.67s, rows_scanned=8957
+2026-04-01T08:00:03.030Z [WARN] slow query on table spans took 0.41s, rows_scanned=7560
+2026-04-01T08:00:18.843Z [INFO] compaction completed: merged 5655 blocks in 13.12s, freed 959369 bytes
+2026-04-01T08:00:15.684Z [WARN] memory usage at 98.4% for service ingester
+2026-04-01T08:00:12.779Z [DEBUG] span completed: trace_id=a3200e3638c5ad5f735a54e8a1dd784b span_id=06a31e0fe9c3e16c duration=7.48s
+2026-04-01T08:00:21.602Z [WARN] deprecated endpoint /api/v1/sync called by alice - scheduled for removal
+2026-04-01T08:00:24.120Z [INFO] compaction completed: merged 4217 blocks in 372ms, freed 949729 bytes
+2026-04-01T08:00:13.104Z [ERROR] failed to read config from /var/lib/app/index.db: EOF
+2026-04-01T08:00:15.436Z [DEBUG] xml config fallback loaded from /etc/app/legacy-config.xml
+2026-04-01T08:00:20.214Z [WARN] retry attempt 5 for service compactor at 111.56.63.165:4318
+2026-04-01T08:00:10.222Z [DEBUG] span completed: trace_id=6f80762cc604ec304e990b311cf9916f span_id=d05e7d201e8991dc duration=1163ms
+2026-04-01T08:00:37.540Z [INFO] connected to database at 151.156.198.133:443
+2026-04-01T08:00:12.642Z [WARN] deprecated endpoint /api/v1/sync called by alice - scheduled for removal
+2026-04-01T08:00:05.104Z [DEBUG] span completed: trace_id=10a025363055bfab5c4ab3a684b9066a span_id=95f8dbc53853f0fd duration=18.74s
+2026-04-01T08:00:13.731Z [INFO] user svc-ingester authenticated via SSO from 177.127.20.220
+2026-04-01T08:00:07.968Z [DEBUG] xml config fallback loaded from /etc/app/legacy-config.xml
+2026-04-01T08:00:06.400Z [WARN] retry attempt 3 for service alertmanager at 31.115.139.152:8080
+2026-04-01T08:00:39.442Z [INFO] compaction completed: merged 5106 blocks in 19.60s, freed 539410 bytes
+2026-04-01T08:00:11.745Z [DEBUG] span completed: trace_id=d06d989f00a4c8652250f751a4a7d4e1 span_id=29d731cb0c9fa310 duration=251ms
+2026-04-01T08:00:48.104Z [WARN] slow query on table users took 25.34s, rows_scanned=4755
+2026-04-01T08:00:09.715Z [INFO] HTTP POST /api/v1/alerts responded 204 in 4.72s - 510776 bytes
+2026-04-01T08:00:25.710Z [INFO] connected to database at 181.165.134.26:3306
+2026-04-01T08:00:37.572Z [INFO] flushed 9023 records to WAL segment /data/wal/segment-00042
+2026-04-01T08:00:17.376Z [INFO] compaction completed: merged 938 blocks in 16.16s, freed 756095 bytes
+2026-04-01T08:00:37.719Z [INFO] legacy sync: copied 9360 rows from users to replica
+2026-04-01T08:00:26.180Z [INFO] flushed 1960 records to WAL segment /var/lib/app/index.db
+2026-04-01T08:00:10.745Z [DEBUG] span completed: trace_id=2a09eaa2d0ae7844e136590e25c1ea51 span_id=fb272d165d1540c7 duration=2797ms
+2026-04-01T08:00:03.960Z [WARN] deprecated endpoint /api/v1/sync called by svc-ingester - scheduled for removal
+2026-04-01T08:00:47.952Z [ERROR] request ecefb693-e826-b39f-95c8-4e6b3f92b481 failed: disk quota exceeded (trace_id=9e111d00b452f29395b5dfc780d646cf)
+2026-04-01T08:00:37.430Z [WARN] retry attempt 5 for service compactor at 143.243.180.92:80
+2026-04-01T08:01:15.738Z [INFO] connected to database at 238.144.222.190:3306
+2026-04-01T08:00:48.920Z [WARN] memory usage at 14.8% for service query-frontend
+2026-04-01T08:01:20.688Z [INFO] HTTP PUT /api/v1/alerts responded 404 in 2452ms - 7786 bytes
+2026-04-01T08:00:09.114Z [WARN] deprecated endpoint /api/v1/sync called by admin - scheduled for removal
+2026-04-01T08:01:03.683Z [INFO] legacy sync: copied 390 rows from users to replica
+2026-04-01T08:00:27.148Z [INFO] user svc-ingester authenticated via SSO from 75.238.150.90
+2026-04-01T08:01:33.510Z [INFO] legacy sync: copied 2091 rows from logs_buffer to replica
+2026-04-01T08:00:56.580Z [INFO] legacy sync: copied 5983 rows from logs_buffer to replica
+2026-04-01T08:00:28.858Z [INFO] flushed 4839 records to WAL segment /data/wal/segment-00042
+2026-04-01T08:01:06.816Z [DEBUG] span completed: trace_id=79c045fba09786610b120069bd0c0c7c span_id=82a99ddd02940e43 duration=2635ms
+2026-04-01T08:01:30.111Z [INFO] HTTP GET /api/v2/dashboards responded 500 in 18.27s - 406676 bytes
+2026-04-01T08:01:42.100Z [INFO] connected to database at 114.193.169.164:443
+2026-04-01T08:01:29.403Z [DEBUG] span completed: trace_id=e7485038b66dda702d5069fe16d65146 span_id=f8e1ded37942c8bf duration=4.91s
+2026-04-01T08:01:04.168Z [WARN] deprecated endpoint /api/v1/sync called by alice - scheduled for removal
+2026-04-01T08:01:48.438Z [INFO] HTTP GET /api/v2/metrics responded 401 in 13.70s - 211992 bytes
+2026-04-01T08:00:09.180Z [WARN] retry attempt 5 for service compactor at 194.194.218.66:6379
+2026-04-01T08:01:45.710Z [INFO] flushed 3069 records to WAL segment /etc/app/config.yaml
+2026-04-01T08:01:46.568Z [INFO] HTTP POST /api/v1/orders responded 403 in 2968ms - 298166 bytes
+2026-04-01T08:01:53.601Z [ERROR] failed to read config from /etc/app/config.yaml: context deadline exceeded
+2026-04-01T08:01:52.346Z [INFO] user svc-ingester authenticated via SSO from 221.80.67.251
+2026-04-01T08:00:54.929Z [INFO] legacy sync: copied 5634 rows from spans to replica
+2026-04-01T08:00:08.580Z [DEBUG] span completed: trace_id=b4b83cedb665de99568b2f697c4745e4 span_id=8b427d38a0782044 duration=6.74s
+2026-04-01T08:01:46.567Z [WARN] slow query on table logs_buffer took 25.49s, rows_scanned=4449
+2026-04-01T08:00:13.578Z [INFO] HTTP DELETE /api/v1/health responded 502 in 10.13s - 285729 bytes
+2026-04-01T08:02:02.283Z [INFO] flushed 6803 records to WAL segment /var/lib/app/index.db
+2026-04-01T08:00:20.736Z [INFO] health check passed: service=gateway uptime=2.19s
+2026-04-01T08:01:32.690Z [INFO] compaction completed: merged 3436 blocks in 21.40s, freed 686825 bytes
+2026-04-01T08:01:13.854Z [ERROR] request a969ba4b-459a-5872-4204-3c9436411310 failed: connection refused (trace_id=cd660d350b6a1665ef2dfeeff2b0aee3)
+2026-04-01T08:01:01.908Z [ERROR] failed to read config from /tmp/crash-dump.bin: broken pipe
+2026-04-01T08:00:11.288Z [INFO] health check passed: service=query-frontend uptime=3009ms
+2026-04-01T08:01:42.810Z [INFO] connected to database at 152.205.77.114:6379
+2026-04-01T08:00:58.590Z [WARN] retry attempt 1 for service ingester at 45.8.220.2:5432
+2026-04-01T08:02:06.309Z [ERROR] request 8b200814-4998-dc82-148a-7e6538693be0 failed: EOF (trace_id=80d29c934fa73c85e99aa731feaf7b85)
+2026-04-01T08:00:18.288Z [DEBUG] span completed: trace_id=08ab7b072b5724b430aeee01e4c8cf7f span_id=66e472ecf1337bdf duration=10.02s
+2026-04-01T08:01:43.368Z [DEBUG] xml config fallback loaded from /etc/app/legacy-config.xml
+2026-04-01T08:00:58.534Z [INFO] health check passed: service=ingester uptime=20.53s
+2026-04-01T08:00:48.375Z [WARN] slow query on table metrics_raw took 27.92s, rows_scanned=7592
+2026-04-01T08:01:13.644Z [INFO] user charlie authenticated via SSO from 145.13.6.10
+2026-04-01T08:01:57.117Z [INFO] user charlie authenticated via SSO from 35.86.236.200
+2026-04-01T08:02:10.104Z [INFO] compaction completed: merged 2860 blocks in 10.38s, freed 705936 bytes
+2026-04-01T08:02:00.554Z [INFO] connected to database at 27.222.219.190:80
+2026-04-01T08:00:38.720Z [INFO] connected to database at 28.201.204.183:4317
+2026-04-01T08:02:43.863Z [INFO] compaction completed: merged 2819 blocks in 24.51s, freed 404852 bytes
+2026-04-01T08:01:18.392Z [WARN] deprecated endpoint /api/v1/sync called by admin - scheduled for removal
+2026-04-01T08:02:24.918Z [ERROR] failed to read config from /var/lib/app/index.db: permission denied
+2026-04-01T08:02:12.972Z [INFO] connected to database at 170.119.66.129:9090
+2026-04-01T08:02:20.505Z [WARN] memory usage at 74.7% for service distributor
+2026-04-01T08:02:13.042Z [INFO] HTTP PATCH /api/v2/metrics responded 403 in 821ms - 689593 bytes
+2026-04-01T08:00:44.631Z [WARN] retry attempt 4 for service gateway at 238.249.61.167:9090
+2026-04-01T08:01:59.328Z [INFO] legacy sync: copied 2666 rows from users to replica
+2026-04-01T08:02:22.133Z [DEBUG] span completed: trace_id=f5ed3279b6a03b2aea86bf92e2bd6800 span_id=4226b45a44143acd duration=889ms
+2026-04-01T08:02:47.040Z [WARN] deprecated endpoint /api/v1/sync called by bob - scheduled for removal
+2026-04-01T08:00:37.310Z [INFO] flushed 2331 records to WAL segment /var/lib/app/index.db
+2026-04-01T08:01:46.260Z [ERROR] request 2fc9e719-47f8-923c-8a1e-b7c5da5bbf10 failed: broken pipe (trace_id=023079b059e2cd2b645b67df2692cc4e)
+2026-04-01T08:02:37.170Z [ERROR] failed to read config from /data/wal/segment-00042: no such host
+2026-04-01T08:01:40.486Z [INFO] flushed 7049 records to WAL segment /var/log/app/server.log
+2026-04-01T08:00:49.210Z [INFO] health check passed: service=distributor uptime=20.73s
+2026-04-01T08:00:50.496Z [DEBUG] xml config fallback loaded from /etc/app/legacy-config.xml
+2026-04-01T08:02:58.286Z [DEBUG] span completed: trace_id=05d17e07958d8e4cdf284dead7de0be8 span_id=4f26f41d3f4b5782 duration=10.68s
+2026-04-01T08:01:14.284Z [INFO] health check passed: service=compactor uptime=1.69s
+2026-04-01T08:00:36.234Z [INFO] user admin authenticated via SSO from 238.25.178.197

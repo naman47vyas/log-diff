@@ -106,12 +106,13 @@ func processReader(r io.Reader, p parser.Parser, norm normalizer.Norm, cfg drain
 		go func() {
 			defer workerWg.Done()
 			for line := range lines {
-				entry, err := p.Parse(line)
+				content, err := p.Parse(line)
 				if err != nil {
 					errCount.Add(1)
 					continue
 				}
-				normalized := norm.Normalize(entry.Severity + " " + entry.Message)
+				// normalized := norm.Normalize(entry.Severity + " " + entry.Message)
+				normalized := norm.Normalize(content)
 				results <- normalized
 			}
 		}()
