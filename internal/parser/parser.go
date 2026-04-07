@@ -6,15 +6,8 @@ import "errors"
 // the expected format.
 var ErrUnparseable = errors.New("unparseable log line")
 
-// Holds the structured parts of raw log line
-type LogEntry struct {
-	Timestamp string
-	Severity  string
-	Message   string
-}
-
-// Interface because we might see there would be different log line formats
-// Implementations would hold specific formats. Json/brackets,Otlp etc
+// Parser extracts the meaningful content from a raw log line,
+// stripping metadata like timestamps that would prevent clustering.
 type Parser interface {
-	Parse(line string) (*LogEntry, error)
+	Parse(line string) (string, error)
 }

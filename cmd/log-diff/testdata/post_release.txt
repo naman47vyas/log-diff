@@ -1,0 +1,100 @@
+2026-04-03T14:00:00.000Z [DEBUG] span completed: trace_id=9ce4bd5b014315e9fd831b1ab65d3a86 span_id=0f7fc473594ec832 duration=1.26s
+2026-04-03T14:00:01.396Z [DEBUG] span completed: trace_id=9dcba93821346ebcb9a44ce8a762823c span_id=0c0387874cc821ca duration=44ms
+2026-04-03T14:00:00.876Z [INFO] user bob authenticated via SSO from 237.154.70.149
+2026-04-03T14:00:05.889Z [INFO] user bob authenticated via SSO from 197.157.185.69
+2026-04-03T14:00:04.300Z [INFO] user svc-ingester authenticated via SSO from 166.199.135.169
+2026-04-03T14:00:01.215Z [INFO] health check passed: service=alertmanager uptime=3342ms
+2026-04-03T14:00:01.956Z [INFO] HTTP PUT /api/v1/health responded 200 in 2480ms - 462824 bytes
+2026-04-03T14:00:08.316Z [WARN] memory usage at 39.0% for service compactor
+2026-04-03T14:00:12.944Z [INFO] user svc-query authenticated via SSO from 56.142.109.108
+2026-04-03T14:00:10.827Z [INFO] HTTP POST /api/v2/metrics responded 201 in 23.35s - 380041 bytes
+2026-04-03T14:00:11.130Z [ERROR] failed to read config from /data/wal/segment-00042: no such host
+2026-04-03T14:00:16.907Z [INFO] user charlie authenticated via SSO from 172.31.159.172
+2026-04-03T14:00:13.164Z [WARN] circuit breaker OPEN for service query-frontend after 4772 consecutive failures
+2026-04-03T14:00:11.765Z [WARN] retry attempt 5 for service compactor at 112.120.129.79:4317
+2026-04-03T14:00:23.422Z [INFO] feature flag new-dashboard evaluated to true for user svc-query
+2026-04-03T14:00:27.045Z [ERROR] request 4c17fce9-81fa-0093-e653-d966016a0745 failed: TLS handshake timeout (trace_id=df523cfb499d25bb7b667f7dd7739229)
+2026-04-03T14:00:02.928Z [ERROR] failed to read config from /data/wal/segment-00042: connection refused
+2026-04-03T14:00:34.595Z [INFO] flushed 1582 records to WAL segment /var/lib/app/index.db
+2026-04-03T14:00:10.602Z [DEBUG] span completed: trace_id=159b3fc8c93f3015fb2d3bd278d36c38 span_id=2a199bfae305c99b duration=15.11s
+2026-04-03T14:00:23.560Z [INFO] flushed 8056 records to WAL segment /data/wal/segment-00042
+2026-04-03T14:00:35.760Z [INFO] compaction completed: merged 6129 blocks in 591ms, freed 1002331 bytes
+2026-04-03T14:00:22.302Z [ERROR] request e28d950f-9aae-670a-b96f-504092a07154 failed: connection refused (trace_id=d5aecd2a3893aaa64b8c5bf7ee94f43d)
+2026-04-03T14:00:21.582Z [INFO] flushed 8173 records to WAL segment /data/wal/segment-00042
+2026-04-03T14:00:25.093Z [INFO] user admin authenticated via SSO from 106.183.152.43
+2026-04-03T14:00:13.728Z [INFO] connected to database at 1.213.13.106:3306
+2026-04-03T14:00:12.975Z [WARN] memory usage at 0.8% for service query-frontend
+2026-04-03T14:00:17.706Z [WARN] memory usage at 65.1% for service distributor
+2026-04-03T14:00:25.083Z [INFO] HTTP GET /api/v2/metrics responded 404 in 1449ms - 761215 bytes
+2026-04-03T14:00:35.560Z [ERROR] request 342de58f-a389-ab3c-dc47-0f0c94a4d304 failed: EOF (trace_id=e3d1eee5c19c1e66aa61c83b8c684525)
+2026-04-03T14:00:19.488Z [WARN] retry attempt 1 for service query-frontend at 190.110.197.36:8080
+2026-04-03T14:00:33.120Z [WARN] memory usage at 94.9% for service alertmanager
+2026-04-03T14:00:56.947Z [INFO] health check passed: service=ingester uptime=22.70s
+2026-04-03T14:00:08.160Z [INFO] compaction completed: merged 3037 blocks in 29.44s, freed 603652 bytes
+2026-04-03T14:00:08.052Z [INFO] compaction completed: merged 2817 blocks in 11.26s, freed 691507 bytes
+2026-04-03T14:00:33.864Z [WARN] circuit breaker OPEN for service query-frontend after 9190 consecutive failures
+2026-04-03T14:00:10.605Z [ERROR] request 915db818-27f1-f8bd-8f58-17805d5899c3 failed: connection refused (trace_id=73550f6a5e0dd2772c8b7ae5336f0fef)
+2026-04-03T14:01:00.012Z [ERROR] OOM kill detected for container ingester in pod app-c06fc4b4 - memory limit 2147483648 bytes
+2026-04-03T14:01:10.004Z [INFO] HTTP POST /api/v1/logs/ingest responded 503 in 1768ms - 627891 bytes
+2026-04-03T14:00:39.710Z [INFO] compaction completed: merged 9703 blocks in 21.41s, freed 805060 bytes
+2026-04-03T14:00:34.671Z [INFO] HTTP DELETE /api/v2/dashboards responded 403 in 1247ms - 157775 bytes
+2026-04-03T14:00:45.040Z [ERROR] failed to read config from /data/wal/segment-00042: broken pipe
+2026-04-03T14:01:04.001Z [INFO] HTTP PATCH /api/v1/alerts responded 502 in 2.09s - 635209 bytes
+2026-04-03T14:00:04.620Z [INFO] gRPC stream opened: method=/otel.CollectorService/Export peer=59.185.84.41:4318
+2026-04-03T14:01:10.176Z [INFO] flushed 5806 records to WAL segment /var/lib/app/index.db
+2026-04-03T14:00:47.696Z [INFO] feature flag new-dashboard evaluated to false for user charlie
+2026-04-03T14:00:53.685Z [WARN] circuit breaker OPEN for service query-frontend after 9144 consecutive failures
+2026-04-03T14:01:02.054Z [INFO] health check passed: service=distributor uptime=22.63s
+2026-04-03T14:01:11.769Z [ERROR] request 6a19a134-1d23-1e8a-94eb-def8bd3e0710 failed: TLS handshake timeout (trace_id=50d7fc23e4d416696487ca9367dcb773)
+2026-04-03T14:00:27.936Z [WARN] slow query on table events took 15.82s, rows_scanned=192
+2026-04-03T14:01:04.631Z [INFO] health check passed: service=gateway uptime=2239ms
+2026-04-03T14:01:09.750Z [WARN] circuit breaker OPEN for service gateway after 3316 consecutive failures
+2026-04-03T14:00:59.211Z [WARN] slow query on table users took 24.33s, rows_scanned=552
+2026-04-03T14:00:52.260Z [ERROR] failed to connect to cache at 46.59.124.186:6379: broken pipe
+2026-04-03T14:00:31.164Z [INFO] health check passed: service=distributor uptime=979ms
+2026-04-03T14:01:21.972Z [ERROR] failed to read config from /data/wal/segment-00042: too many open files
+2026-04-03T14:01:14.690Z [INFO] compaction completed: merged 8776 blocks in 3738ms, freed 168091 bytes
+2026-04-03T14:01:49.872Z [INFO] HTTP PATCH /api/v1/health responded 502 in 2286ms - 1003387 bytes
+2026-04-03T14:01:19.287Z [INFO] flushed 3985 records to WAL segment /etc/app/config.yaml
+2026-04-03T14:00:18.270Z [WARN] memory usage at 70.5% for service ingester
+2026-04-03T14:00:34.338Z [INFO] health check passed: service=ingester uptime=2.80s
+2026-04-03T14:00:12.780Z [WARN] slow query on table users took 3.10s, rows_scanned=2323
+2026-04-03T14:01:19.422Z [WARN] retry attempt 2 for service alertmanager at 110.238.14.90:5432
+2026-04-03T14:00:26.722Z [DEBUG] span completed: trace_id=b92aabbbf59c63653e03dd3ebfa3e300 span_id=a8ee97229729e4e0 duration=797ms
+2026-04-03T14:02:06.693Z [WARN] circuit breaker OPEN for service query-frontend after 4840 consecutive failures
+2026-04-03T14:00:12.544Z [ERROR] request d8ec272f-b46c-d3d0-651e-86afe6b810c5 failed: no such host (trace_id=c0f808d2d23776d76c4e12644547d326)
+2026-04-03T14:00:10.595Z [WARN] slow query on table spans took 2.83s, rows_scanned=2117
+2026-04-03T14:01:14.514Z [INFO] flushed 3771 records to WAL segment /tmp/crash-dump.bin
+2026-04-03T14:01:27.234Z [WARN] circuit breaker OPEN for service compactor after 1526 consecutive failures
+2026-04-03T14:00:21.828Z [INFO] feature flag v2-ingestion evaluated to false for user admin
+2026-04-03T14:02:20.898Z [INFO] connected to database at 8.205.59.60:4317
+2026-04-03T14:00:57.680Z [ERROR] failed to read config from /data/wal/segment-00042: permission denied
+2026-04-03T14:00:09.372Z [ERROR] failed to read config from /data/wal/segment-00042: too many open files
+2026-04-03T14:01:21.504Z [INFO] connected to database at 231.240.126.60:4317
+2026-04-03T14:00:47.450Z [INFO] compaction completed: merged 9721 blocks in 1589ms, freed 627137 bytes
+2026-04-03T14:01:48.336Z [WARN] retry attempt 3 for service alertmanager at 245.80.8.82:80
+2026-04-03T14:02:26.475Z [WARN] memory usage at 89.2% for service distributor
+2026-04-03T14:00:21.736Z [WARN] memory usage at 0.9% for service distributor
+2026-04-03T14:01:33.093Z [INFO] flushed 6152 records to WAL segment /tmp/crash-dump.bin
+2026-04-03T14:01:08.250Z [WARN] retry attempt 2 for service ingester at 17.214.2.147:80
+2026-04-03T14:00:19.750Z [INFO] compaction completed: merged 346 blocks in 4390ms, freed 411234 bytes
+2026-04-03T14:01:11.920Z [INFO] compaction completed: merged 4469 blocks in 1156ms, freed 662029 bytes
+2026-04-03T14:01:19.461Z [WARN] slow query on table events took 60ms, rows_scanned=5848
+2026-04-03T14:02:10.462Z [INFO] health check passed: service=compactor uptime=907ms
+2026-04-03T14:01:25.822Z [WARN] circuit breaker OPEN for service compactor after 239 consecutive failures
+2026-04-03T14:02:43.800Z [ERROR] failed to connect to cache at 6.105.230.125:6379: broken pipe
+2026-04-03T14:01:15.650Z [INFO] connected to database at 34.247.54.198:8080
+2026-04-03T14:00:28.638Z [ERROR] failed to read config from /var/lib/app/index.db: TLS handshake timeout
+2026-04-03T14:00:34.017Z [WARN] retry attempt 4 for service query-frontend at 212.86.131.92:80
+2026-04-03T14:02:16.488Z [INFO] flushed 4156 records to WAL segment /data/wal/segment-00042
+2026-04-03T14:02:37.619Z [WARN] slow query on table spans took 4319ms, rows_scanned=7098
+2026-04-03T14:00:43.020Z [INFO] gRPC stream opened: method=/otel.CollectorService/Export peer=45.135.84.185:4318
+2026-04-03T14:00:59.150Z [INFO] connected to database at 48.231.225.148:3306
+2026-04-03T14:02:10.732Z [ERROR] failed to connect to cache at 105.98.240.233:6379: connection refused
+2026-04-03T14:01:27.606Z [INFO] feature flag v2-ingestion evaluated to true for user alice
+2026-04-03T14:02:28.426Z [ERROR] failed to read config from /var/log/app/server.log: no such host
+2026-04-03T14:01:06.595Z [INFO] connected to database at 13.240.12.182:4318
+2026-04-03T14:00:40.224Z [WARN] slow query on table orders took 14.17s, rows_scanned=6492
+2026-04-03T14:02:16.382Z [ERROR] OOM kill detected for container compactor in pod app-319ad2ae - memory limit 3221225472 bytes
+2026-04-03T14:03:01.496Z [INFO] feature flag beta-alerts evaluated to false for user charlie
+2026-04-03T14:03:27.801Z [INFO] compaction completed: merged 742 blocks in 1.72s, freed 1028279 bytes

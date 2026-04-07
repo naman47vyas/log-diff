@@ -23,7 +23,7 @@ type Config struct {
 }
 
 // DefaultConfig returns the same defaults used by IBM Drain3:
-// depth=4, similarity=0.4, maxChildren=100.
+// depth=4, similarity=0.7, maxChildren=100.
 func DefaultConfig() Config {
 	return Config{
 		Depth:        4,

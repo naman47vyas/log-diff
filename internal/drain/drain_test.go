@@ -112,9 +112,10 @@ func TestTrainCreatesCluster(t *testing.T) {
 
 func TestTrainMergesSimilarMessages(t *testing.T) {
 	d := New(DefaultConfig())
-	d.Train("connected to 10.0.0.1")
-	d.Train("connected to 10.0.0.2")
-	c := d.Train("connected to 10.0.0.3")
+	// 4 tokens, 1 differs → similarity 3/4 = 0.75, above 0.7 threshold
+	d.Train("connected to server at 10.0.0.1")
+	d.Train("connected to server at 10.0.0.2")
+	c := d.Train("connected to server at 10.0.0.3")
 
 	if len(d.Clusters()) != 1 {
 		t.Fatalf("expected 1 cluster, got %d", len(d.Clusters()))
@@ -122,8 +123,8 @@ func TestTrainMergesSimilarMessages(t *testing.T) {
 	if c.Count != 3 {
 		t.Errorf("count = %d, want 3", c.Count)
 	}
-	if c.Template() != "connected to <*>" {
-		t.Errorf("template = %q, want %q", c.Template(), "connected to <*>")
+	if c.Template() != "connected to server at <*>" {
+		t.Errorf("template = %q, want %q", c.Template(), "connected to server at <*>")
 	}
 }
 
@@ -150,8 +151,6 @@ func TestTrainWithNormalizedTokens(t *testing.T) {
 	if c.Count != 2 {
 		t.Errorf("count = %d, want 2", c.Count)
 	}
-	// <IP> and <NUM> are params, so they route to wildcard
-	// but since all messages are identical, template stays the same
 	if c.Template() != "connection from <IP> established on <NUM>" {
 		t.Errorf("template = %q", c.Template())
 	}
@@ -186,13 +185,14 @@ func TestTrainEmptyMessage(t *testing.T) {
 
 func TestTrainTemplateGeneralizes(t *testing.T) {
 	d := New(DefaultConfig())
-	d.Train("error in module auth code 500")
-	d.Train("error in module payments code 404")
+	// 7 tokens, 2 differ → similarity 5/7 ≈ 0.71, above 0.7 threshold
+	d.Train("error occurred in module auth with code 500")
+	d.Train("error occurred in module payments with code 404")
 
 	if len(d.Clusters()) != 1 {
 		t.Fatalf("expected 1 cluster, got %d", len(d.Clusters()))
 	}
-	want := "error in module <*> code <*>"
+	want := "error occurred in module <*> with code <*>"
 	got := d.Clusters()[0].Template()
 	if got != want {
 		t.Errorf("template = %q, want %q", got, want)
