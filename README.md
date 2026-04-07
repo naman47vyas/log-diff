@@ -8,10 +8,10 @@ After a deploy, you want to know: did any new error patterns appear? Did an exis
 
 ## How it works
 
-1. **Parse** — Each log line is split into timestamp, severity, and message using a format-specific parser (currently bracket format: `2026-04-03T14:00:00.000Z [ERROR] ...`).
-2. **Normalize** — Variable tokens (IPs, UUIDs, paths, durations, etc.) are replaced with stable placeholders like `<IP>`, `<UUID>`, `<PATH>` so that structurally identical lines cluster together.
+1. **Parse** — The timestamp is stripped from each line; the remainder (severity bracket + message) is passed forward for clustering.
+2. **Normalize** — Variable tokens are replaced with stable placeholders like `<IP>`, `<UUID>`, `<PATH>` so structurally identical lines cluster together. Handles bare tokens, `key=value` pairs, and delimiter-wrapped tokens like `(10.0.0.1)`.
 3. **Cluster (Drain)** — Normalized messages are fed into a Drain parse tree, which groups them into template clusters. Positions that vary across messages become `<*>` wildcards.
-4. **Diff** — The pre and post cluster sets are compared by template string. Templates are classified as **new**, **gone**, or **changed** (significant frequency shift).
+4. **Diff** — The pre and post cluster sets are matched first by exact template string, then by wildcard-aware fuzzy match (so a template that gained or lost a `<*>` position is tracked as "changed" rather than gone+new). Matched templates are classified as **new**, **gone**, or **changed** (significant relative frequency shift).
 
 ## Installation
 
@@ -40,7 +40,7 @@ logdiff --pre logs/before-deploy.log --post logs/after-deploy.log
 | `--pre` | *(required)* | Path to the pre-release log file |
 | `--post` | *(required)* | Path to the post-release log file |
 | `--format` | `bracket` | Log format (`bracket` supported) |
-| `--sim-threshold` | `0.4` | Drain similarity threshold (0.0–1.0). Lower values merge more aggressively. |
+| `--sim-threshold` | `0.7` | Drain similarity threshold (0.0–1.0). Lower values merge more aggressively. |
 | `--freq-threshold` | `2.0` | Frequency change ratio to flag a template as changed. `2.0` means a template must double or halve in relative frequency. |
 
 ### Expected log format
@@ -60,17 +60,17 @@ Pre-release:  48521 total lines, 34 templates
 Post-release: 51208 total lines, 37 templates
 
 --- NEW templates (2) ---
-  [count: 312, 0.6%] ERROR panic in module <*> goroutine <*>
-    → ERROR panic in module auth goroutine 847
-    → ERROR panic in module billing goroutine 1203
+  [count: 312, 0.6%] [ERROR] panic in module <*> goroutine <*>
+    → [ERROR] panic in module auth goroutine 847
+    → [ERROR] panic in module billing goroutine 1203
 
 --- GONE templates (1) ---
-  [was: 89, 0.2%] WARN legacy auth fallback for <*>
-    → WARN legacy auth fallback for user admin
+  [was: 89, 0.2%] [WARN] legacy auth fallback for <*>
+    → [WARN] legacy auth fallback for user admin
 
 --- CHANGED templates (1) ---
-  [pre: 102 (0.2%) → post: 1843 (3.6%)] ERROR connection timeout to <*>
-    → ERROR connection timeout to 10.0.0.5:5432
+  [pre: 102 (0.2%) → post: 1843 (3.6%)] [ERROR] connection timeout to <*>
+    → [ERROR] connection timeout to 10.0.0.5:5432
 ```
 
 ## Normalizer
@@ -86,6 +86,8 @@ The fast normalizer replaces variable tokens in a single pass over whitespace-de
 | `<DUR>` | `500ms`, `1.5s`, `200µs` |
 | `<SIZE>` | `512KB`, `1.2GiB` |
 | `<NUM>` | `42`, `3.14`, `-7` |
+
+Tokens are classified after stripping surrounding delimiters (`()`, `[]`), and for `key=value` pairs only the value side is normalized (e.g. `conn=10.0.0.1` → `conn=<IP>`).
 
 A regex-based normalizer is also included and additionally handles URLs, emails, quoted strings, timestamps, percentages, and MAC addresses.
 
@@ -103,7 +105,7 @@ go test ./...
 │       └── main.go               # CLI entry point, pipeline orchestration
 ├── internal/
 │   ├── parser/
-│   │   ├── parser.go            # Parser interface + LogEntry type
+│   │   ├── parser.go            # Parser interface
 │   │   ├── bracket.go           # Bracket-format parser
 │   │   └── parser_test.go
 │   ├── normalizer/
