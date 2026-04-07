@@ -10,6 +10,7 @@ type FastNormalizer struct{}
 func NewFast() *FastNormalizer {
 	return &FastNormalizer{}
 }
+
 func (f *FastNormalizer) Normalize(msg string) string {
 	tokens := strings.Fields(msg)
 	changed := false
@@ -32,13 +33,35 @@ func (f *FastNormalizer) Normalize(msg string) string {
 // if it's a known variable pattern, or "" to keep it as-is.
 // Order matters — most specific patterns first.
 func classifyToken(tok string) string {
+	// Strip surrounding delimiters like () [] so we can
+	// classify inner content (e.g. "(trace_id=abc123...)").
+	prefix, core, suffix := unwrapDelimiters(tok)
+
+	if replacement := classifyCore(core); replacement != "" {
+		return prefix + replacement + suffix
+	}
+
+	// key=value: normalize the value side only
+	if eqIdx := strings.IndexByte(core, '='); eqIdx > 0 && eqIdx < len(core)-1 {
+		key := core[:eqIdx]
+		val := core[eqIdx+1:]
+		if replacement := classifyCore(val); replacement != "" {
+			return prefix + key + "=" + replacement + suffix
+		}
+	}
+
+	return ""
+}
+
+// classifyCore runs the actual pattern checks on a clean token.
+func classifyCore(tok string) string {
 	if isUUID(tok) {
 		return "<UUID>"
 	}
 	if isHex(tok) {
 		return "<HEX>"
 	}
-	if ip := isIP(tok); ip {
+	if isIP(tok) {
 		return "<IP>"
 	}
 	if isPath(tok) {
@@ -54,6 +77,26 @@ func classifyToken(tok string) string {
 		return "<NUM>"
 	}
 	return ""
+}
+
+// unwrapDelimiters strips matched pairs of () [] from the
+// outside of a token so the classifier sees the inner value.
+// Returns the stripped prefix, inner core, and suffix separately.
+func unwrapDelimiters(tok string) (prefix, core, suffix string) {
+	for len(tok) >= 2 {
+		if tok[0] == '(' && tok[len(tok)-1] == ')' {
+			prefix += "("
+			suffix = ")" + suffix
+			tok = tok[1 : len(tok)-1]
+		} else if tok[0] == '[' && tok[len(tok)-1] == ']' {
+			prefix += "["
+			suffix = "]" + suffix
+			tok = tok[1 : len(tok)-1]
+		} else {
+			break
+		}
+	}
+	return prefix, tok, suffix
 }
 
 // --- detectors ---------------------------------------------------------------
@@ -212,6 +255,10 @@ func isNumericStr(s string) bool {
 		if s[i] < '0' || s[i] > '9' {
 			return false
 		}
+	}
+	// trailing dot like "12." is not valid
+	if s[len(s)-1] == '.' {
+		return false
 	}
 	return true
 }
